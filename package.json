@@ -1,8 +1,9 @@
 {
   "name": "base-dir-gen",
-  "displayName": "base-dir-gen",
+  "displayName": "Base Feature Directory Generator",
   "description": "Generate Every Feature files",
   "version": "0.0.1",
+  "publisher": "HussamAbed",
   "engines": {
     "vscode": "^1.88.0"
   },
@@ -14,8 +15,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "base-dir-gen.helloWorld",
-        "title": "Hello World"
+        "command": "base-dir-gen.createStfulFolder",
+        "title": "BaseDirGen: New Feature (Stateful)"
       },
       {
         "command": "base-dir-gen.createFolder",
@@ -27,9 +28,17 @@
         {
           "when": "explorerResourceIsFolder",
           "command": "base-dir-gen.createFolder"
+        },
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "base-dir-gen.createStfulFolder"
         }
       ]
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hosamafiky/base-dir-gen.git"
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

@@ -9,15 +9,16 @@ import * as vscode from "vscode";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
-  let disposable = vscode.commands.registerCommand(
-    "base-dir-gen.createFolder",
-    (uri) => Go(uri)
+  vscode.commands.registerCommand("base-dir-gen.createFolder", (uri) =>
+    Go(uri)
   );
 
-  context.subscriptions.push(disposable);
+  vscode.commands.registerCommand("base-dir-gen.createStfulFolder", (uri) =>
+    Go(uri, true)
+  );
 }
 
-export async function Go(uri: vscode.Uri) {
+export async function Go(uri: vscode.Uri, isStful: boolean = false) {
   // Show feature prompt
   let featureName = await promptForFeatureName();
 
@@ -37,7 +38,7 @@ export async function Go(uri: vscode.Uri) {
 
   const pascalCaseFeatureName = getPascalCase(featureName.toLowerCase());
 
-  await generateFeatureArchitecture(`${featureName}`, targetDirectory);
+  await generateFeatureArchitecture(`${featureName}`, targetDirectory, isStful);
   vscode.window.showInformationMessage(
     `Successfully Generated ${pascalCaseFeatureName} Feature`
   );
@@ -80,7 +81,8 @@ export async function promptForTargetDirectory(): Promise<string | undefined> {
 
 export async function generateFeatureArchitecture(
   featureName: string,
-  targetDirectory: string
+  targetDirectory: string,
+  isStful: boolean
 ) {
   // Create the feature directory
   const featureDirectoryPath = path.join(
@@ -96,7 +98,7 @@ export async function generateFeatureArchitecture(
 
   await createDirectory(featureDirectoryPath);
   await createDirectory(featureWidgetsDirectoryPath);
-  await generateFeatureCode(featureName, featureDirectoryPath);
+  await generateFeatureCode(featureName, featureDirectoryPath, isStful);
   await generateFeatureWidgetsCode(featureName, featureWidgetsDirectoryPath);
 }
 
@@ -113,12 +115,13 @@ function createDirectory(targetDirectory: string): Promise<void> {
 
 async function generateFeatureCode(
   featureName: string,
-  targetDirectory: string
+  targetDirectory: string,
+  isStful: boolean
 ) {
   await Promise.all([
-    createMainFeatureTemplate(featureName, targetDirectory),
-    createFeatureDataTemplate(featureName, targetDirectory),
-    createFeatureImportsTemplate(featureName, targetDirectory),
+    createMainFeatureTemplate(featureName, targetDirectory, isStful),
+    createFeatureDataTemplate(featureName, targetDirectory, isStful),
+    createFeatureImportsTemplate(featureName, targetDirectory, isStful),
   ]);
 }
 
@@ -188,7 +191,8 @@ async function createFeatureWidgetsImportsTemplate(
 
 async function createFeatureImportsTemplate(
   featureName: string,
-  targetDirectory: string
+  targetDirectory: string,
+  isStful: boolean
 ) {
   const snakeCaseFeatureName = getSnakeCase(featureName);
   const targetPath = `${targetDirectory}/${snakeCaseFeatureName}_imports.dart`;
@@ -198,7 +202,7 @@ async function createFeatureImportsTemplate(
   return new Promise(async (resolve, reject) => {
     writeFile(
       targetPath,
-      getFeatureImportsTemplate(featureName),
+      getFeatureImportsTemplate(featureName, isStful),
       "utf8",
       (error) => {
         if (error) {
@@ -213,7 +217,8 @@ async function createFeatureImportsTemplate(
 
 async function createFeatureDataTemplate(
   featureName: string,
-  targetDirectory: string
+  targetDirectory: string,
+  isStful: boolean
 ) {
   const snakeCaseFeatureName = getSnakeCase(featureName);
   const targetPath = `${targetDirectory}/${snakeCaseFeatureName}_data.dart`;
@@ -223,7 +228,7 @@ async function createFeatureDataTemplate(
   return new Promise(async (resolve, reject) => {
     writeFile(
       targetPath,
-      getFeatureDataTemplate(featureName),
+      getFeatureDataTemplate(featureName, isStful),
       "utf8",
       (error) => {
         if (error) {
@@ -238,7 +243,8 @@ async function createFeatureDataTemplate(
 
 function createMainFeatureTemplate(
   featureName: string,
-  targetDirectory: string
+  targetDirectory: string,
+  isStful: boolean
 ) {
   const snakeCaseFeatureName = getSnakeCase(featureName);
   const targetPath = `${targetDirectory}/${snakeCaseFeatureName}.dart`;
@@ -248,7 +254,9 @@ function createMainFeatureTemplate(
   return new Promise(async (resolve, reject) => {
     writeFile(
       targetPath,
-      getFeatureMainTemplate(featureName),
+      isStful
+        ? getFeatureMainStfulTemplate(featureName)
+        : getFeatureMainTemplate(featureName),
       "utf8",
       (error) => {
         if (error) {
@@ -259,6 +267,42 @@ function createMainFeatureTemplate(
       }
     );
   });
+
+  function getFeatureMainStfulTemplate(featureName: string) {
+    const pascalCaseFeatureName = getPascalCase(featureName);
+    const snakeCaseFeatureName = getSnakeCase(featureName);
+
+    return `part of '${snakeCaseFeatureName}_imports.dart';
+
+class ${pascalCaseFeatureName}View extends StatefulWidget {
+  const ${pascalCaseFeatureName}View({super.key});
+
+  @override
+  State<${pascalCaseFeatureName}View> createState() => _${pascalCaseFeatureName}ViewState();
+}
+
+class _${pascalCaseFeatureName}ViewState extends State<${pascalCaseFeatureName}View> {
+  final ${pascalCaseFeatureName}Data data = ${pascalCaseFeatureName}Data();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Placeholder();
+  }
+}
+`;
+  }
 
   function getFeatureMainTemplate(featureName: string) {
     const pascalCaseFeatureName = getPascalCase(featureName);
@@ -296,15 +340,19 @@ class ${pascalCaseFeatureName}View extends StatelessWidget {
   }
 }
 
-function getFeatureDataTemplate(featureName: string) {
+function getFeatureDataTemplate(featureName: string, isStful: boolean) {
   const pascalCaseFeatureName = getPascalCase(featureName);
   const snakeCaseFeatureName = getSnakeCase(featureName);
   return `part of '${snakeCaseFeatureName}_imports.dart';
 
-class ${pascalCaseFeatureName}Data {
+${
+  isStful
+    ? `class ${pascalCaseFeatureName}Data {}`
+    : `class ${pascalCaseFeatureName}Data {
   const ${pascalCaseFeatureName}Data(this.context);
 
   final BuildContext context;
+}`
 }`;
 }
 
@@ -332,12 +380,16 @@ part '${snakeCaseFeatureName}_widget.dart';
 `;
 }
 
-function getFeatureImportsTemplate(featureName: string) {
+function getFeatureImportsTemplate(featureName: string, isStful: boolean) {
   const snakeCaseFeatureName = getSnakeCase(featureName);
 
   return `import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-    
+${
+  !isStful
+    ? `import 'package:flutter_bloc/flutter_bloc.dart';
+`
+    : ``
+}
 part '${snakeCaseFeatureName}_data.dart';
 part '${snakeCaseFeatureName}.dart';
 `;
