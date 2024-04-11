@@ -1,30 +1,58 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as lodash from "lodash";
-import { mkdirp } from "mkdirp";
-import { existsSync, lstatSync, writeFile } from "node:fs";
 import path from "path";
-import * as vscode from "vscode";
+import { ExtensionContext, Uri, commands, window } from "vscode";
+import { getDataImportsTemplate } from "./templates/clean_arch_template/data/data-imports.template";
+import { getDataSourceTemplate } from "./templates/clean_arch_template/data/data-source.template";
+import { getServiceLoctorTemplate } from "./templates/clean_arch_template/data/di.template";
+import { getEntityModelTemplate } from "./templates/clean_arch_template/data/model.template";
+import { getRepositoryTemplate } from "./templates/clean_arch_template/data/repository.template";
+import { getDomainImportsTemplate } from "./templates/clean_arch_template/domain/domain-imports.template";
+import { getEntityTemplate } from "./templates/clean_arch_template/domain/entity.template";
+import { getUsecaseTemplate } from "./templates/clean_arch_template/domain/usecase.template";
+import { getCubitStateTemplate } from "./templates/clean_arch_template/presentation/cubit-state.template";
+import { getCubitClassTemplate } from "./templates/clean_arch_template/presentation/cubit.template";
+import { getPresentationListTemplate } from "./templates/clean_arch_template/presentation/list.template";
+import { getPresentationImportsTemplate } from "./templates/clean_arch_template/presentation/presentation-imports.template";
+import { getScreenBodyTemplate } from "./templates/clean_arch_template/presentation/screen-body.template";
+import { getScreenViewTemplate } from "./templates/clean_arch_template/presentation/screen-view.template";
+import { getProviderFeatureDataTemplate } from "./templates/provider_template/data.template";
+import { getProviderFeatureImportsTemplate } from "./templates/provider_template/imports.template";
+import { getFeatureMainTemplate } from "./templates/provider_template/view.template";
+import { getFeatureDataTemplate } from "./templates/stateful_template/data.template";
+import { getFeatureImportsTemplate } from "./templates/stateful_template/imports.template";
+import { getFeatureMainStfulTemplate } from "./templates/stateful_template/view.template";
+import { getFeatureWidgetTemplate } from "./templates/widgets_template/widget.template";
+import { getFeatureWidgetsImportsTemplate } from "./templates/widgets_template/widgets-imports.template";
+import { promptForFeatureName } from "./utils/ask-for-feature-name";
+import { createDirectories } from "./utils/create-directories";
+import { createDirectory } from "./utils/create-directory";
+import { getTargetDirectory } from "./utils/get-target-directory";
+import { isNameValid } from "./utils/name-validation";
+import { getPascalCase } from "./utils/pascal-case";
+import { writeContent } from "./utils/write-content";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export async function activate(context: vscode.ExtensionContext) {
-  vscode.commands.registerCommand("base-dir-gen.createFolder", (uri) =>
-    Go(uri)
+export async function activate(context: ExtensionContext) {
+  commands.registerCommand("base-dir-gen.createFolder", (uri) => Go(uri));
+
+  commands.registerCommand("base-dir-gen.createStfulFolder", (uri) =>
+    Go(uri, true)
   );
 
-  vscode.commands.registerCommand("base-dir-gen.createStfulFolder", (uri) =>
-    Go(uri, true)
+  commands.registerCommand("base-dir-gen.createCleanArchFolder", (uri) =>
+    generateCleanArchitecture(uri)
   );
 }
 
-export async function Go(uri: vscode.Uri, isStful: boolean = false) {
+export async function Go(uri: Uri, isStful: boolean = false) {
   // Show feature prompt
   let featureName = await promptForFeatureName();
 
   // Abort if name is not valid
   if (!isNameValid(featureName)) {
-    vscode.window.showErrorMessage("The name must not be empty");
+    window.showErrorMessage("The name must not be empty");
     return;
   }
   featureName = `${featureName}`;
@@ -33,50 +61,15 @@ export async function Go(uri: vscode.Uri, isStful: boolean = false) {
   try {
     targetDirectory = await getTargetDirectory(uri);
   } catch (error) {
-    vscode.window.showErrorMessage((error as Error).message + " Aborting1...");
+    window.showErrorMessage((error as Error).message);
   }
 
   const pascalCaseFeatureName = getPascalCase(featureName.toLowerCase());
 
   await generateFeatureArchitecture(`${featureName}`, targetDirectory, isStful);
-  vscode.window.showInformationMessage(
+  window.showInformationMessage(
     `Successfully Generated ${pascalCaseFeatureName} Feature`
   );
-}
-
-// This method is called when your extension is deactivated
-export function deactivate() {}
-
-export async function getTargetDirectory(uri: vscode.Uri): Promise<string> {
-  let targetDirectory;
-  if (
-    lodash.isNil(lodash.get(uri, "fsPath")) ||
-    !lstatSync(uri.fsPath).isDirectory()
-  ) {
-    targetDirectory = await promptForTargetDirectory();
-    if (lodash.isNil(targetDirectory)) {
-      throw Error("Please select a valid directory");
-    }
-  } else {
-    targetDirectory = uri.fsPath;
-  }
-
-  return targetDirectory as string;
-}
-
-export async function promptForTargetDirectory(): Promise<string | undefined> {
-  const options: vscode.OpenDialogOptions = {
-    canSelectMany: false,
-    openLabel: "Select a folder to create the feature in",
-    canSelectFolders: true,
-  };
-
-  return vscode.window.showOpenDialog(options).then((uri) => {
-    if (lodash.isNil(uri) || lodash.isEmpty(uri)) {
-      return undefined;
-    }
-    return uri![0].fsPath ?? undefined; // Added null check for 'uri' and accessed fsPath property of the first element
-  });
 }
 
 export async function generateFeatureArchitecture(
@@ -96,21 +89,13 @@ export async function generateFeatureArchitecture(
     "widgets"
   );
 
-  await createDirectory(featureDirectoryPath);
-  await createDirectory(featureWidgetsDirectoryPath);
-  await generateFeatureCode(featureName, featureDirectoryPath, isStful);
-  await generateFeatureWidgetsCode(featureName, featureWidgetsDirectoryPath);
-}
+  createDirectory(featureDirectoryPath).finally(async () =>
+    generateFeatureCode(featureName, featureDirectoryPath, isStful)
+  );
 
-function createDirectory(targetDirectory: string): Promise<void> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      mkdirp(targetDirectory).finally(() => resolve());
-    } catch (error) {
-      reject(error);
-      return;
-    }
-  });
+  createDirectory(featureWidgetsDirectoryPath).finally(async () =>
+    generateFeatureWidgetsCode(featureName, featureWidgetsDirectoryPath)
+  );
 }
 
 async function generateFeatureCode(
@@ -139,54 +124,22 @@ async function createFeatureWidgetTemplate(
   featureName: string,
   targetDirectory: string
 ) {
-  const snakeCaseFeatureName = getSnakeCase(featureName);
-  const targetPath = `${targetDirectory}/${snakeCaseFeatureName}_widget.dart`;
-
-  if (existsSync(targetPath)) {
-    throw Error(`${snakeCaseFeatureName}_widget.dart already exists`);
-  }
-
-  return new Promise(async (resolve, reject) => {
-    writeFile(
-      targetPath,
-      getFeatureWidgetTemplate(featureName),
-      "utf8",
-      (error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve(true);
-      }
-    );
-  });
+  writeContent(
+    `${featureName}_widget`,
+    targetDirectory,
+    getFeatureWidgetTemplate(featureName)
+  );
 }
 
 async function createFeatureWidgetsImportsTemplate(
   featureName: string,
   targetDirectory: string
 ) {
-  const snakeCaseFeatureName = getSnakeCase(featureName);
-  const targetPath = `${targetDirectory}/${snakeCaseFeatureName}_widgets_imports.dart`;
-
-  if (existsSync(targetPath)) {
-    throw Error(`${snakeCaseFeatureName}_widgets_imports.dart already exists`);
-  }
-
-  return new Promise(async (resolve, reject) => {
-    writeFile(
-      targetPath,
-      getFeatureWidgetsImportsTemplate(featureName),
-      "utf8",
-      (error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve(true);
-      }
-    );
-  });
+  writeContent(
+    `${featureName}_widgets_imports`,
+    targetDirectory,
+    getFeatureWidgetsImportsTemplate(featureName)
+  );
 }
 
 async function createFeatureImportsTemplate(
@@ -194,25 +147,13 @@ async function createFeatureImportsTemplate(
   targetDirectory: string,
   isStful: boolean
 ) {
-  const snakeCaseFeatureName = getSnakeCase(featureName);
-  const targetPath = `${targetDirectory}/${snakeCaseFeatureName}_imports.dart`;
-  if (existsSync(targetPath)) {
-    throw Error(`${snakeCaseFeatureName}_imports.dart already exists`);
-  }
-  return new Promise(async (resolve, reject) => {
-    writeFile(
-      targetPath,
-      getFeatureImportsTemplate(featureName, isStful),
-      "utf8",
-      (error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve(true);
-      }
-    );
-  });
+  writeContent(
+    `${featureName}_imports`,
+    targetDirectory,
+    isStful
+      ? getFeatureImportsTemplate(featureName)
+      : getProviderFeatureImportsTemplate(featureName)
+  );
 }
 
 async function createFeatureDataTemplate(
@@ -220,25 +161,13 @@ async function createFeatureDataTemplate(
   targetDirectory: string,
   isStful: boolean
 ) {
-  const snakeCaseFeatureName = getSnakeCase(featureName);
-  const targetPath = `${targetDirectory}/${snakeCaseFeatureName}_data.dart`;
-  if (existsSync(targetPath)) {
-    throw Error(`${snakeCaseFeatureName}_data.dart already exists`);
-  }
-  return new Promise(async (resolve, reject) => {
-    writeFile(
-      targetPath,
-      getFeatureDataTemplate(featureName, isStful),
-      "utf8",
-      (error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve(true);
-      }
-    );
-  });
+  writeContent(
+    `${featureName}_data`,
+    targetDirectory,
+    isStful
+      ? getFeatureDataTemplate(featureName)
+      : getProviderFeatureDataTemplate(featureName)
+  );
 }
 
 function createMainFeatureTemplate(
@@ -246,213 +175,196 @@ function createMainFeatureTemplate(
   targetDirectory: string,
   isStful: boolean
 ) {
-  const snakeCaseFeatureName = getSnakeCase(featureName);
-  const targetPath = `${targetDirectory}/${snakeCaseFeatureName}.dart`;
-  if (existsSync(targetPath)) {
-    throw Error(`${snakeCaseFeatureName}.dart already exists`);
-  }
-  return new Promise(async (resolve, reject) => {
-    writeFile(
-      targetPath,
-      isStful
-        ? getFeatureMainStfulTemplate(featureName)
-        : getFeatureMainTemplate(featureName),
-      "utf8",
-      (error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve(true);
-      }
-    );
-  });
-
-  function getFeatureMainStfulTemplate(featureName: string) {
-    const pascalCaseFeatureName = getPascalCase(featureName);
-    const snakeCaseFeatureName = getSnakeCase(featureName);
-
-    return `part of '${snakeCaseFeatureName}_imports.dart';
-
-class ${pascalCaseFeatureName}View extends StatefulWidget {
-  const ${pascalCaseFeatureName}View({super.key});
-
-  @override
-  State<${pascalCaseFeatureName}View> createState() => _${pascalCaseFeatureName}ViewState();
-}
-
-class _${pascalCaseFeatureName}ViewState extends State<${pascalCaseFeatureName}View> {
-  final ${pascalCaseFeatureName}Data data = ${pascalCaseFeatureName}Data();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Placeholder();
-  }
-}
-`;
-  }
-
-  function getFeatureMainTemplate(featureName: string) {
-    const pascalCaseFeatureName = getPascalCase(featureName);
-    const snakeCaseFeatureName = getSnakeCase(featureName);
-    return `part of '${snakeCaseFeatureName}_imports.dart';
-
-class ${pascalCaseFeatureName} extends StatelessWidget {
-  const ${pascalCaseFeatureName}({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => ${pascalCaseFeatureName}Data(context),
-      child: const ${pascalCaseFeatureName}View(),
-    );
-  }
-}
-
-class ${pascalCaseFeatureName}View extends StatelessWidget {
-  const ${pascalCaseFeatureName}View({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final data = context.read<${pascalCaseFeatureName}Data>();
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('${pascalCaseFeatureName}'),
-      ),
-      body: const Center(
-        child: Text('Hello, ${pascalCaseFeatureName}!'),
-      ),
-    );
-  }
-}`;
-  }
-}
-
-function getFeatureDataTemplate(featureName: string, isStful: boolean) {
-  const pascalCaseFeatureName = getPascalCase(featureName);
-  const snakeCaseFeatureName = getSnakeCase(featureName);
-  return `part of '${snakeCaseFeatureName}_imports.dart';
-
-${
-  isStful
-    ? `class ${pascalCaseFeatureName}Data {}`
-    : `class ${pascalCaseFeatureName}Data {
-  const ${pascalCaseFeatureName}Data(this.context);
-
-  final BuildContext context;
-}`
-}`;
-}
-
-function getFeatureWidgetTemplate(featureName: string) {
-  const pascalCaseFeatureName = getPascalCase(featureName);
-  const snakeCaseFeatureName = getSnakeCase(featureName);
-  return `part of '${snakeCaseFeatureName}_widgets_imports.dart';
-
-class ${pascalCaseFeatureName}Widget extends StatelessWidget {
-  const ${pascalCaseFeatureName}Widget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text('Hello, ${pascalCaseFeatureName}Widget!');
-  }
-}`;
-}
-
-function getFeatureWidgetsImportsTemplate(featureName: string) {
-  const snakeCaseFeatureName = getSnakeCase(featureName);
-
-  return `import 'package:flutter/material.dart';
-
-part '${snakeCaseFeatureName}_widget.dart';
-`;
-}
-
-function getFeatureImportsTemplate(featureName: string, isStful: boolean) {
-  const snakeCaseFeatureName = getSnakeCase(featureName);
-
-  return `import 'package:flutter/material.dart';
-${
-  !isStful
-    ? `import 'package:flutter_bloc/flutter_bloc.dart';
-`
-    : ``
-}
-part '${snakeCaseFeatureName}_data.dart';
-part '${snakeCaseFeatureName}.dart';
-`;
-}
-
-export function promptForFeatureName(): Thenable<string | undefined> {
-  const featureNamePromptOptions: vscode.InputBoxOptions = {
-    prompt: "Feature Name",
-    placeHolder: "counter",
-  };
-  return vscode.window.showInputBox(featureNamePromptOptions);
-}
-
-export function isNameValid(featureName: string | undefined): boolean {
-  // Check if feature name exists
-  if (!featureName) {
-    return false;
-  }
-  // Check if feature name is null or white space
-  if (lodash.isNil(featureName) || featureName.trim() === "") {
-    return false;
-  }
-
-  // Check if feature name contains Arabic characters
-  if (/[\u0600-\u06FF]/.test(featureName)) {
-    return false;
-  }
-
-  // Return true if feature name is valid
-  return true;
-}
-
-export function getPascalCase(name: string): string {
-  // Split the name by spaces or underscores
-  let words = name.split(/[\s_]+/);
-
-  // Capitalize the first letter of each word and join them
-  let pascalCaseName = words
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join("");
-
-  return pascalCaseName;
-}
-
-export function getSnakeCase(name: string): string {
-  // Split the name by spaces or underscores
-  let words = name.split(/[\s_]+/);
-
-  // Lowercase the words and join them with underscores
-  let snakeCaseName = words.map((word) => word.toLowerCase()).join("_");
-
-  return snakeCaseName;
-}
-
-export async function createDirectories(
-  targetDirectory: string,
-  childDirectories: string[]
-): Promise<void> {
-  // Create the parent directory
-  await createDirectory(targetDirectory);
-  // Creat the children
-  childDirectories.map(
-    async (directory) =>
-      await createDirectory(path.join(targetDirectory, directory))
+  writeContent(
+    featureName,
+    targetDirectory,
+    isStful
+      ? getFeatureMainStfulTemplate(featureName)
+      : getFeatureMainTemplate(featureName)
   );
 }
+
+async function generateCleanArchitecture(uri: Uri) {
+  // Show feature prompt
+  let featureName = await promptForFeatureName();
+
+  // Abort if name is not valid
+  if (!isNameValid(featureName)) {
+    window.showErrorMessage("The name must not be empty");
+    return;
+  }
+
+  featureName = `${featureName}`;
+
+  const pascalCaseFeatureName = getPascalCase(featureName.toLowerCase());
+
+  let targetDirectory = "";
+  try {
+    targetDirectory = await getTargetDirectory(uri);
+  } catch (error) {
+    window.showErrorMessage((error as Error).message);
+  }
+
+  generateFeatureCleanArchitecture(featureName, targetDirectory).finally(() =>
+    window.showInformationMessage(
+      `Successfully Generated ${pascalCaseFeatureName} Feature`
+    )
+  );
+}
+
+export async function generateFeatureCleanArchitecture(
+  featureName: string,
+  targetDirectory: string
+) {
+  // Create the feature directory
+  const featureDirectoryPath = path.join(
+    targetDirectory,
+    featureName.toLowerCase()
+  );
+  await createDirectories(featureDirectoryPath, [
+    "data",
+    "domain",
+    "presentation",
+  ]);
+
+  Promise.all([
+    createFeatureCleanArchitectureDataTemplate(
+      featureName,
+      path.join(featureDirectoryPath, "data")
+    ),
+    createFeatureCleanArchitectureDomainTemplate(
+      featureName,
+      path.join(featureDirectoryPath, "domain")
+    ),
+    createFeatureCleanArchitecturePresentationTemplate(
+      featureName,
+      path.join(featureDirectoryPath, "presentation")
+    ),
+  ]);
+}
+
+async function createFeatureCleanArchitecturePresentationTemplate(
+  featureName: string,
+  targetDirectory: string
+) {
+  let subDirectories = ["cubit", "screens", "imports", "widgets"];
+  let templates = [
+    getScreenViewTemplate(featureName),
+    getPresentationImportsTemplate(featureName),
+  ];
+  let fileNames = [
+    `${featureName}_screen`,
+    `${featureName}_presentation_imports`,
+  ];
+
+  for (let index = 0; index < subDirectories.length; index++) {
+    const directory = subDirectories[index];
+
+    if (index == 0) {
+      let targetDir = path.join(targetDirectory, directory);
+      let fileNames = [`${featureName}_cubit`, `${featureName}_state`];
+      for (let i = 0; i < fileNames.length; i++) {
+        const template =
+          i == 0
+            ? getCubitClassTemplate(featureName)
+            : getCubitStateTemplate(featureName);
+        const fileName = fileNames[i];
+        createDirectory(targetDir).finally(() => {
+          writeContent(fileName, targetDir, template);
+        });
+      }
+    } else if (index == 3) {
+      let targetDir = path.join(targetDirectory, directory);
+      let fileNames = [`${featureName}_body`, `${featureName}_list`];
+
+      for (let i = 0; i < fileNames.length; i++) {
+        const template =
+          i == 0
+            ? getScreenBodyTemplate(featureName)
+            : getPresentationListTemplate(featureName);
+        const fileName = fileNames[i];
+        createDirectory(targetDir).finally(() => {
+          writeContent(fileName, targetDir, template);
+        });
+      }
+    } else {
+      const template = index == 1 ? templates[0] : templates[1];
+      const fileName = index == 1 ? fileNames[0] : fileNames[1];
+
+      let targetDir = path.join(targetDirectory, directory);
+
+      createDirectory(targetDir).finally(() => {
+        writeContent(fileName, targetDir, template);
+      });
+    }
+  }
+}
+
+async function createFeatureCleanArchitectureDomainTemplate(
+  featureName: string,
+  targetDirectory: string
+) {
+  let subDirectories = ["entities", "imports", "use_case"];
+  let templates = [
+    getEntityTemplate(featureName),
+    getDomainImportsTemplate(featureName),
+    getUsecaseTemplate(featureName),
+  ];
+  let fileNames = [
+    `${featureName}_entity`,
+    `${featureName}_domain_imports`,
+    `fetch_${featureName}_use_case`,
+  ];
+  for (let index = 0; index < subDirectories.length; index++) {
+    const directory = subDirectories[index];
+    const template = templates[index];
+    const fileName = fileNames[index];
+
+    let targetDir = path.join(targetDirectory, directory);
+
+    createDirectory(targetDir).finally(() => {
+      writeContent(fileName, targetDir, template);
+    });
+  }
+}
+
+async function createFeatureCleanArchitectureDataTemplate(
+  featureName: string,
+  targetDirectory: string
+) {
+  let subDirectories = [
+    "data_sources",
+    "di",
+    "imports",
+    "models",
+    "repositories",
+  ];
+  let templates = [
+    getDataSourceTemplate(featureName),
+    getServiceLoctorTemplate(featureName),
+    getDataImportsTemplate(featureName),
+    getEntityModelTemplate(featureName),
+    getRepositoryTemplate(featureName),
+  ];
+  let fileNames = [
+    `${featureName}_data_source`,
+    `${featureName}_di`,
+    `${featureName}_data_imports`,
+    `${featureName}_model`,
+    `${featureName}_repository`,
+  ];
+  for (let index = 0; index < subDirectories.length; index++) {
+    const directory = subDirectories[index];
+    const template = templates[index];
+    const fileName = fileNames[index];
+
+    let targetDir = path.join(targetDirectory, directory);
+
+    createDirectory(targetDir).finally(() => {
+      writeContent(fileName, targetDir, template);
+    });
+  }
+}
+
+// This method is called when your extension is deactivated
+export function deactivate() {}

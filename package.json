@@ -21,6 +21,10 @@
       {
         "command": "base-dir-gen.createFolder",
         "title": "BaseDirGen: New Feature"
+      },
+      {
+        "command": "base-dir-gen.createCleanArchFolder",
+        "title": "BaseDirGen: New Clean Arch Feature"
       }
     ],
     "menus": {
@@ -32,6 +36,10 @@
         {
           "when": "explorerResourceIsFolder",
           "command": "base-dir-gen.createStfulFolder"
+        },
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "base-dir-gen.createCleanArchFolder"
         }
       ]
     }
