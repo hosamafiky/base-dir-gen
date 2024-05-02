@@ -11,9 +11,9 @@ class ${upperCamelCaseFeatureName}DataSourceImpl implements ${upperCamelCaseFeat
   @override
   Future<List<${upperCamelCaseFeatureName}Model>> fetch${upperCamelCaseFeatureName}Data() {
     return Future.value([
-      ${upperCamelCaseFeatureName}Model(id: 1, name: 'First ${upperCamelCaseFeatureName}'),
-      ${upperCamelCaseFeatureName}Model(id: 2, name: 'Second ${upperCamelCaseFeatureName}'),
-      ${upperCamelCaseFeatureName}Model(id: 3, name: 'Third ${upperCamelCaseFeatureName}'),
+      const ${upperCamelCaseFeatureName}Model(id: 1, name: 'First ${upperCamelCaseFeatureName}'),
+      const ${upperCamelCaseFeatureName}Model(id: 2, name: 'Second ${upperCamelCaseFeatureName}'),
+      const ${upperCamelCaseFeatureName}Model(id: 3, name: 'Third ${upperCamelCaseFeatureName}'),
     ]);
   }
 }`;
