@@ -2,7 +2,7 @@
   "name": "base-dir-gen",
   "displayName": "Base Feature Directory Generator",
   "description": "Generate Every Feature files",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publisher": "HussamAbed",
   "engines": {
     "vscode": "^1.88.0"
@@ -66,11 +66,12 @@
     "@vscode/test-cli": "^0.0.8",
     "@vscode/test-electron": "^2.3.9",
     "eslint": "^8.57.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "change-case": "^5.4.4",
     "lodash": "^4.17.21",
-    "mkdirp": "^3.0.1"
+    "mkdirp": "^3.0.1",
+    "tsc": "^2.0.4"
   }
 }
