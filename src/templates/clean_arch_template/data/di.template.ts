@@ -6,10 +6,10 @@ export function getServiceLoctorTemplate(featureName: string) {
   const lowerCamelCaseFeatureName = getLowerCamelCase(featureName);
   return `part of '../imports/${featureName}_data_imports.dart';
 void setUp${upperCamelCaseFeatureName}Dependencies() {
-  ConstantManager.serviceLocator
-      .registerLazySingleton<Fetch${upperCamelCaseFeatureName}UseCase>(
+  ConstantManager.serviceLocator.registerLazySingleton<Fetch${upperCamelCaseFeatureName}UseCase>(
     () => Fetch${upperCamelCaseFeatureName}UseCase(
-        ${lowerCamelCaseFeatureName}Repository: ConstantManager.serviceLocator<${upperCamelCaseFeatureName}Repository>()),
+      ${lowerCamelCaseFeatureName}Repository: ConstantManager.serviceLocator<${upperCamelCaseFeatureName}Repository>(),
+    ),
   );
 
   ConstantManager.serviceLocator.registerLazySingleton<${upperCamelCaseFeatureName}Repository>(
