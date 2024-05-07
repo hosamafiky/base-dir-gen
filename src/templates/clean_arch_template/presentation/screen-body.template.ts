@@ -14,9 +14,7 @@ class ${upperCamelCaseFeatureName}sBody extends StatelessWidget {
     return BlocBuilder<${upperCamelCaseFeatureName}Cubit, ${upperCamelCaseFeatureName}State>(
       builder: (context, state) {
         return switch (state.baseStatus) {
-          BaseStatus.initial ||
-          BaseStatus.loading =>
-            CustomLoading.showLoadingView(),
+          BaseStatus.initial || BaseStatus.loading => CustomLoading.showLoadingView(),
           BaseStatus.error => Center(child: Text(state.errorMessage)),
           BaseStatus.success => _${upperCamelCaseFeatureName}List(${lowerCamelCaseFeatureName}s: state.${lowerCamelCaseFeatureName}s)
         };
