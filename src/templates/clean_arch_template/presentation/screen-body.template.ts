@@ -13,12 +13,12 @@ class ${upperCamelCaseFeatureName}sBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<${upperCamelCaseFeatureName}Cubit, ${upperCamelCaseFeatureName}State>(
       builder: (context, state) {
-        return switch (state.baseState) {
-          BaseState.initial ||
-          BaseState.loading =>
+        return switch (state.baseStatus) {
+          BaseStatus.initial ||
+          BaseStatus.loading =>
             CustomLoading.showLoadingView(),
-          BaseState.error => Center(child: Text(state.errorMessage)),
-          BaseState.success => _${upperCamelCaseFeatureName}List(${lowerCamelCaseFeatureName}s: state.${lowerCamelCaseFeatureName}s)
+          BaseStatus.error => Center(child: Text(state.errorMessage)),
+          BaseStatus.success => _${upperCamelCaseFeatureName}List(${lowerCamelCaseFeatureName}s: state.${lowerCamelCaseFeatureName}s)
         };
       },
     );
