@@ -8,7 +8,6 @@ import '../../../../config/res/color_manager.dart';
 import '../../../../config/res/constants_manager.dart';
 import '../../../../core/widgets/custom_loading.dart';
 import '../../domain/imports/${featureName}_domain_imports.dart';
-import 'package:flutter_base/src/config/res/color_manager.dart';
 
 part '../cubit/${featureName}_cubit.dart';
 part '../cubit/${featureName}_state.dart';
