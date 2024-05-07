@@ -6,36 +6,36 @@ export function getCubitStateTemplate(featureName: string) {
   const lowerCamelCaseFeatureName = getLowerCamelCase(featureName);
   return `part of '../imports/${featureName}_presentation_imports.dart';
 final class ${upperCamelCaseFeatureName}State extends Equatable {
-  final BaseState baseState;
+  final BaseStatus baseStatus;
   final List<${upperCamelCaseFeatureName}Entity> ${lowerCamelCaseFeatureName}s;
   final String errorMessage;
 
   const ${upperCamelCaseFeatureName}State({
-    required this.baseState,
+    required this.baseStatus,
     required this.${lowerCamelCaseFeatureName}s,
     this.errorMessage = ConstantManager.emptyText,
   });
 
   factory ${upperCamelCaseFeatureName}State.initial() {
     return const ${upperCamelCaseFeatureName}State(
-      baseState: BaseState.initial,
+      baseStatus: BaseStatus.initial,
       ${lowerCamelCaseFeatureName}s: [],
     );
   }
 
   ${upperCamelCaseFeatureName}State copyWith({
-    BaseState? baseState,
+    BaseStatus? baseStatus,
     List<${upperCamelCaseFeatureName}Entity>? ${lowerCamelCaseFeatureName}s,
     String? errorMessage,
   }) {
     return ${upperCamelCaseFeatureName}State(
-      baseState: baseState ?? this.baseState,
+      baseStatus: baseStatus ?? this.baseStatus,
       ${lowerCamelCaseFeatureName}s: ${lowerCamelCaseFeatureName}s ?? this.${lowerCamelCaseFeatureName}s,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object> get props => [${lowerCamelCaseFeatureName}s,baseState, errorMessage];
+  List<Object> get props => [${lowerCamelCaseFeatureName}s,baseStatus, errorMessage];
 }`;
 }

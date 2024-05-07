@@ -16,13 +16,13 @@ class ${upperCamelCaseFeatureName}Cubit extends Cubit<${upperCamelCaseFeatureNam
     result.when(
       (${lowerCamelCaseFeatureName}s) => emit(
         state.copyWith(
-          baseState: BaseState.success,
+          baseStatus: BaseStatus.success,
           ${lowerCamelCaseFeatureName}s: ${lowerCamelCaseFeatureName}s,
         ),
       ),
       (error) => emit(
         state.copyWith(
-          baseState: BaseState.error,
+          baseStatus: BaseStatus.error,
           errorMessage: error.message,
         ),
       ),
