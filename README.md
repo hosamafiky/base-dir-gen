@@ -6,6 +6,7 @@ This tool is designed to generate feature directories. It is specifically tailor
 
 To use this tool, right-click on the folder where you want to create the feature and select "BaseDirGen: New Feature". Enter the feature name in snake_case format.
 Additionally, if you want to create a feature with a stateful widget as the main page, you can use the "BaseDirGen: New Feature (stful)" command. Just like before, enter the feature name in snake_case format.
+Additionally, if you want to create a clean-arch feature, you can use the "BaseDirGen:New Clean Arch Feature" command. Just like before, enter the feature name in snake_case format.
 
 For example, if you want to create a feature named "user authentication", you would enter "user_authentication".
 

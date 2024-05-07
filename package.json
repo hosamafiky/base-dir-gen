@@ -71,7 +71,6 @@
   "dependencies": {
     "change-case": "^5.4.4",
     "lodash": "^4.17.21",
-    "mkdirp": "^3.0.1",
-    "tsc": "^2.0.4"
+    "mkdirp": "^3.0.1"
   }
 }
