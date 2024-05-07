@@ -9,7 +9,6 @@ class ${upperCamelCaseFeatureName}Entity extends Equatable{
 
   const ${upperCamelCaseFeatureName}Entity({required this.id, required this.name});
 
-
   @override
   List<Object> get props => [id, name];
 }`;

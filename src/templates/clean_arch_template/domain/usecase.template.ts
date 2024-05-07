@@ -12,8 +12,8 @@ class Fetch${upperCamelCaseFeatureName}UseCase extends UseCase<List<${upperCamel
 
   Fetch${upperCamelCaseFeatureName}UseCase({required this.${lowerCamelCaseFeatureName}Repository});
   @override
-  Future<Result<List<${upperCamelCaseFeatureName}Entity>, Failure>> call([String? param]) {
-    return ${lowerCamelCaseFeatureName}Repository.get${upperCamelCaseFeatureName}Data();
+  Future<Result<List<${upperCamelCaseFeatureName}Entity>, Failure>> call([String? param]) async {
+    return await ${lowerCamelCaseFeatureName}Repository.get${upperCamelCaseFeatureName}Data();
   }
 }`;
 }
