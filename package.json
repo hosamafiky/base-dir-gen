@@ -2,7 +2,7 @@
   "name": "base-dir-gen",
   "displayName": "Base Feature Directory Generator",
   "description": "Generate Every Feature files",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "HussamAbed",
   "engines": {
     "vscode": "^1.88.0"
