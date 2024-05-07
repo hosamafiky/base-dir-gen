@@ -2,6 +2,7 @@
   "name": "base-dir-gen",
   "displayName": "Base Feature Directory Generator",
   "description": "Generate Every Feature files",
+  "icon": "images/flutter.png",
   "version": "1.0.2",
   "publisher": "HussamAbed",
   "engines": {
