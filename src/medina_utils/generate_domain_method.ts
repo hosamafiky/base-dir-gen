@@ -1,4 +1,5 @@
 import path from "path";
+import { window } from "vscode";
 import { getMedinaAddUsecaseTemplate } from "../medina_clean_template/domain/add_usecase.template";
 import { getMedinaDomainImportsTemplate } from "../medina_clean_template/domain/domain_imports.template";
 import { getMedinaEntityTemplate } from "../medina_clean_template/domain/entity.template";
@@ -14,9 +15,10 @@ export async function createFeatureCleanArchitectureDomainTemplate(
   let subDirectories = ["entities", "usecases", "repositories"];
   let templates = [
     getMedinaEntityTemplate(featureName),
+    ``,
     getMedinaRepositoryTemplate(featureName),
   ];
-  let fileNames = [`${featureName}`, `${featureName}_repository`];
+  let fileNames = [`${featureName}`, ``, `${featureName}_repository`];
   for (let index = 0; index < subDirectories.length; index++) {
     const directory = subDirectories[index];
     let targetDir = path.join(targetDirectory, directory);
@@ -35,13 +37,14 @@ export async function createFeatureCleanArchitectureDomainTemplate(
         const fileName = usecasesNames[i];
 
         createDirectory(targetDir).finally(() => {
-          writeContent(fileName, path.join(targetDir, fileName), template);
+          writeContent(fileName, targetDir, template);
         });
       }
     } else {
       const template = templates[index];
       const fileName = fileNames[index];
 
+      window.showInformationMessage(`Creating ${fileName} in ${targetDir}`);
       createDirectory(targetDir).finally(() => {
         writeContent(fileName, targetDir, template);
       });

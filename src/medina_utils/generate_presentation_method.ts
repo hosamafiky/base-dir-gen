@@ -34,7 +34,7 @@ export async function createFeatureCleanArchitecturePresentationTemplate(
 
       createDirectory(targetDir).finally(() => {
         writeContent(
-          `${featureName}_page`,
+          `${featureName}s_page`,
           targetDir,
           getMedinaScreenViewTemplate(featureName)
         );
