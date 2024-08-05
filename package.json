@@ -16,12 +16,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "base-dir-gen.createStfulFolder",
-        "title": "BaseDirGen: New Feature (Stateful)"
-      },
-      {
-        "command": "base-dir-gen.createFolder",
-        "title": "BaseDirGen: New Feature"
+        "command": "base-dir-gen.createCleanArchFolderMedina",
+        "title": "BaseDirGen: New Clean Arch Feature[Medina]"
       },
       {
         "command": "base-dir-gen.createCleanArchFolder",
@@ -32,11 +28,7 @@
       "explorer/context": [
         {
           "when": "explorerResourceIsFolder",
-          "command": "base-dir-gen.createFolder"
-        },
-        {
-          "when": "explorerResourceIsFolder",
-          "command": "base-dir-gen.createStfulFolder"
+          "command": "base-dir-gen.createCleanArchFolderMedina"
         },
         {
           "when": "explorerResourceIsFolder",
