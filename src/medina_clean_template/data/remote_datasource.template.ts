@@ -14,7 +14,7 @@ class ${upperCamelCaseFeatureName}RemoteDataSourceImpl implements ${upperCamelCa
   Future<List<${upperCamelCaseFeatureName}Model>> get get${upperCamelCaseFeatureName}s async {
     final request = ApiRequest(
       method: RequestMethod.get,
-      path: ApiConstants.endPoints.POSTS,
+      path: ApiConstants.endPoints.${featureName.toUpperCase()}S,
     );
 
     return await DependencyHelper.instance.get<ApiService>().callApi(

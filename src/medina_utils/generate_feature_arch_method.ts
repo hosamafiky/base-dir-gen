@@ -1,8 +1,11 @@
 import path from "path";
 import { createDirectories } from "../utils/create-directories";
 import { createFeatureCleanArchitectureDataTemplate } from "./generate_data_method";
+import { createFeatureCleanArchitectureDITemplate } from "./generate_di_method";
 import { createFeatureCleanArchitectureDomainTemplate } from "./generate_domain_method";
 import { createFeatureCleanArchitecturePresentationTemplate } from "./generate_presentation_method";
+import { modifyDependencyHelperClass } from "./modify_dependency_helper_class";
+import { modifyEndpointsClass } from "./modify_endpoints_class";
 
 export async function generateFeatureCleanArchitecture(
   featureName: string,
@@ -33,5 +36,14 @@ export async function generateFeatureCleanArchitecture(
       featureName,
       path.join(featureDirectoryPath, "presentation")
     ),
+    createFeatureCleanArchitectureDITemplate(
+      featureName,
+      path.join(featureDirectoryPath, "di")
+    ),
+  ]);
+
+  Promise.all([
+    modifyEndpointsClass(featureName),
+    modifyDependencyHelperClass(featureName),
   ]);
 }

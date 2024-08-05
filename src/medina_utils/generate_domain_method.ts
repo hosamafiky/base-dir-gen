@@ -1,5 +1,4 @@
 import path from "path";
-import { window } from "vscode";
 import { getMedinaAddUsecaseTemplate } from "../medina_clean_template/domain/add_usecase.template";
 import { getMedinaDomainImportsTemplate } from "../medina_clean_template/domain/domain_imports.template";
 import { getMedinaEntityTemplate } from "../medina_clean_template/domain/entity.template";
@@ -44,7 +43,6 @@ export async function createFeatureCleanArchitectureDomainTemplate(
       const template = templates[index];
       const fileName = fileNames[index];
 
-      window.showInformationMessage(`Creating ${fileName} in ${targetDir}`);
       createDirectory(targetDir).finally(() => {
         writeContent(fileName, targetDir, template);
       });

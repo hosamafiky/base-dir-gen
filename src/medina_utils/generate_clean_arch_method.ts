@@ -15,7 +15,7 @@ export async function generateMedinaCleanArchitecture(uri: Uri) {
     return;
   }
 
-  featureName = `${featureName}`;
+  featureName = `${featureName!.toLowerCase()}`;
 
   const pascalCaseFeatureName = getPascalCase(featureName.toLowerCase());
 
