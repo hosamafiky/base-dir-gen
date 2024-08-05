@@ -18,10 +18,6 @@
       {
         "command": "base-dir-gen.createCleanArchFolderMedina",
         "title": "BaseDirGen: New Clean Arch Feature[Medina]"
-      },
-      {
-        "command": "base-dir-gen.createCleanArchFolder",
-        "title": "BaseDirGen: New Clean Arch Feature"
       }
     ],
     "menus": {
@@ -29,10 +25,6 @@
         {
           "when": "explorerResourceIsFolder",
           "command": "base-dir-gen.createCleanArchFolderMedina"
-        },
-        {
-          "when": "explorerResourceIsFolder",
-          "command": "base-dir-gen.createCleanArchFolder"
         }
       ]
     }
