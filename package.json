@@ -3,7 +3,7 @@
   "displayName": "Base Feature Directory Generator",
   "description": "Generate Every Feature files",
   "icon": "images/flutter.png",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publisher": "HussamAbed",
   "engines": {
     "vscode": "^1.88.0"
