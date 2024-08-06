@@ -3,7 +3,6 @@ import { getFileContent } from "../utils/get_file_content";
 import { getPascalCase } from "../utils/pascal-case";
 
 export async function modifyDependencyHelperClass(featureName: string) {
-  let upperCasedFeatureName = featureName.toUpperCase();
   const upperCamelCaseFeatureName = getPascalCase(featureName);
 
   workspace.findFiles("**/dependency_helper.dart").then((files) => {
