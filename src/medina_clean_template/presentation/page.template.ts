@@ -26,7 +26,7 @@ class ${upperCamelCaseFeatureName}sPageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(),
+      appBar: const MainAppBar(),
       body: BlocSelector<${upperCamelCaseFeatureName}Cubit, ${upperCamelCaseFeatureName}State, ({UsecaseStatus status, Failure? failure, List<${upperCamelCaseFeatureName}> ${lowerCamelCaseFeatureName}s})>(
         selector: (state) => (status: state.${lowerCamelCaseFeatureName}sStatus, failure: state.${lowerCamelCaseFeatureName}sFailure, ${lowerCamelCaseFeatureName}s: state.${lowerCamelCaseFeatureName}s),
         builder: (context, state) {
