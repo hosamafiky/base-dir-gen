@@ -55,7 +55,7 @@ class _Add${upperCamelCaseFeatureName}SheetState extends State<Add${upperCamelCa
                       if (!_formKey.currentState!.validate()) return;
                       if (state.add${upperCamelCaseFeatureName}Status == UsecaseStatus.running) return;
 
-                      widget.productCubit.add${upperCamelCaseFeatureName}(Add${upperCamelCaseFeatureName}Params());
+                      widget.${lowerCamelCaseFeatureName}Cubit.add${upperCamelCaseFeatureName}(Add${upperCamelCaseFeatureName}Params());
                     },
                     child: state.add${upperCamelCaseFeatureName}Status == UsecaseStatus.running ? const CircularProgressIndicator.adaptive() : const Text('Add'),
                   ),
