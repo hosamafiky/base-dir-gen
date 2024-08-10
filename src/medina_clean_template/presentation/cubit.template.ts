@@ -4,8 +4,7 @@ import { getPascalCase } from "../../utils/pascal-case";
 export function getMedinaCubitClassTemplate(featureName: string): string {
   const upperCamelCaseFeatureName = getPascalCase(featureName);
   const lowerCamelCaseFeatureName = getLowerCamelCase(featureName);
-  return `
-part of '../presentation_imports.dart';
+  return `part of '../presentation_imports.dart';
 
 class ${upperCamelCaseFeatureName}Cubit extends Cubit<${upperCamelCaseFeatureName}State> {
   ${upperCamelCaseFeatureName}Cubit({
@@ -24,7 +23,7 @@ class ${upperCamelCaseFeatureName}Cubit extends Cubit<${upperCamelCaseFeatureNam
         emit(state.copyWith(${lowerCamelCaseFeatureName}sStatus: UsecaseStatus.error, ${lowerCamelCaseFeatureName}sFailure: failure));
       },
       (${lowerCamelCaseFeatureName}s) {
-        emit(state.copyWith(${lowerCamelCaseFeatureName}sStatus: UsecaseStatus.completed, ${lowerCamelCaseFeatureName}s: ${lowerCamelCaseFeatureName}s));
+        emit(state.copyWith(${lowerCamelCaseFeatureName}sStatus: UsecaseStatus.completed, ${lowerCamelCaseFeatureName}s: ${lowerCamelCaseFeatureName}s.data));
       },
     );
   }
@@ -36,9 +35,9 @@ class ${upperCamelCaseFeatureName}Cubit extends Cubit<${upperCamelCaseFeatureNam
       (failure) {
         emit(state.copyWith(add${upperCamelCaseFeatureName}Status: UsecaseStatus.error, add${upperCamelCaseFeatureName}Failure: failure));
       },
-      (${lowerCamelCaseFeatureName}) {
+      (response) {
         final old${upperCamelCaseFeatureName}s = List<${upperCamelCaseFeatureName}>.from(state.${lowerCamelCaseFeatureName}s);
-        emit(state.copyWith(add${upperCamelCaseFeatureName}Status: UsecaseStatus.completed, ${lowerCamelCaseFeatureName}s: old${upperCamelCaseFeatureName}s..insert(0, ${lowerCamelCaseFeatureName})));
+        emit(state.copyWith(add${upperCamelCaseFeatureName}Status: UsecaseStatus.completed, ${lowerCamelCaseFeatureName}s: old${upperCamelCaseFeatureName}s..insert(0, response.data!)));
       },
     );
   }
