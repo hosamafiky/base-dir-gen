@@ -3,6 +3,7 @@ export function getMedinaDomainImportsTemplate(featureName: string): string {
 import 'package:equatable/equatable.dart';
 
 import '../../../core/error/failures.dart';
+import '../../../core/networking/response_model.dart';
 import '../../../core/standards/use_case.dart';
 
 part '../domain/entities/${featureName}.dart';

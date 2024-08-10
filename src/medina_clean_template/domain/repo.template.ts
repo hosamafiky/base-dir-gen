@@ -5,8 +5,8 @@ export function getMedinaRepositoryTemplate(featureName: string) {
   return `part of '../domain_imports.dart';
 
 abstract class ${upperCamelCaseFeatureName}Repository {
-  Future<Either<Failure, List<${upperCamelCaseFeatureName}>>> get${upperCamelCaseFeatureName}s();
-  Future<Either<Failure, ${upperCamelCaseFeatureName}>> add${upperCamelCaseFeatureName}(Add${upperCamelCaseFeatureName}Params params);
+  Future<Either<Failure, ApiResponse<List<${upperCamelCaseFeatureName}>>>> get${upperCamelCaseFeatureName}s();
+  Future<Either<Failure, ApiResponse<${upperCamelCaseFeatureName}>>> add${upperCamelCaseFeatureName}(Add${upperCamelCaseFeatureName}Params params);
 }
 `;
 }
