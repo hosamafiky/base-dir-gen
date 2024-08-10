@@ -10,12 +10,12 @@ class ${upperCamelCaseFeatureName}RepositoryImpl implements ${upperCamelCaseFeat
   const ${upperCamelCaseFeatureName}RepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<${upperCamelCaseFeatureName}>>> get${upperCamelCaseFeatureName}s() async {
+  Future<Either<Failure, ApiResponse<List<${upperCamelCaseFeatureName}>>>> get${upperCamelCaseFeatureName}s() async {
     return await remoteDataSource.get${upperCamelCaseFeatureName}s.handleCallbackWithFailure;
   }
 
   @override
-  Future<Either<Failure, ${upperCamelCaseFeatureName}>> add${upperCamelCaseFeatureName}(Add${upperCamelCaseFeatureName}Params params) async {
+  Future<Either<Failure, ApiResponse<${upperCamelCaseFeatureName}>>> add${upperCamelCaseFeatureName}(Add${upperCamelCaseFeatureName}Params params) async {
     return await remoteDataSource.add${upperCamelCaseFeatureName}(params).handleCallbackWithFailure;
   }
 }
