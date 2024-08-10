@@ -5,15 +5,16 @@ export function getMedinaGetUsecaseTemplate(featureName: string) {
 
   return `part of '../domain_imports.dart';
 
-class Get${upperCamelCaseFeatureName}sUsecase implements UseCaseWithoutParam<List<${upperCamelCaseFeatureName}>> {
+class Get${upperCamelCaseFeatureName}sUsecase implements UseCaseWithoutParam<ApiResponse<List<${upperCamelCaseFeatureName}>>> {
   final ${upperCamelCaseFeatureName}Repository repository;
 
   const Get${upperCamelCaseFeatureName}sUsecase({required this.repository});
 
   @override
-  Future<Either<Failure, List<${upperCamelCaseFeatureName}>>> call() async {
+  Future<Either<Failure, ApiResponse<List<${upperCamelCaseFeatureName}>>>> call() async {
     return await repository.get${upperCamelCaseFeatureName}s();
   }
 }
+
 `;
 }
