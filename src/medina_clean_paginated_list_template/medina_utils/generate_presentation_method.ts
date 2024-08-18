@@ -1,11 +1,11 @@
 import path from "path";
-import { getMedinaAddSheetTemplate } from "../medina_clean_template/presentation/add_sheet.template";
-import { getMedinaCubitClassTemplate } from "../medina_clean_template/presentation/cubit.template";
-import { getMedinaCubitStateTemplate } from "../medina_clean_template/presentation/cubit_state.template";
-import { getMedinaScreenViewTemplate } from "../medina_clean_template/presentation/page.template";
-import { getMedinaPresentationImportsTemplate } from "../medina_clean_template/presentation/presentation_imports.template";
-import { createDirectory } from "../utils/create-directory";
-import { writeContent } from "../utils/write-content";
+import { createDirectory } from "../../utils/create-directory";
+import { writeContent } from "../../utils/write-content";
+import { getMedinaCubitClassTemplate } from "../presentation/cubit.template";
+import { getMedinaCubitStateTemplate } from "../presentation/cubit_state.template";
+import { getMedinaScreenViewTemplate } from "../presentation/page.template";
+import { getMedinaPresentationImportsTemplate } from "../presentation/presentation_imports.template";
+import { getMedinaPresentationWidgetTemplate } from "../presentation/widget.template";
 
 export async function createFeatureCleanArchitecturePresentationTemplate(
   featureName: string,
@@ -40,13 +40,14 @@ export async function createFeatureCleanArchitecturePresentationTemplate(
         );
       });
     } else {
-      const template = getMedinaAddSheetTemplate(featureName);
-      const fileName = `add_${featureName}_sheet`;
-
       let targetDir = path.join(targetDirectory, directory);
 
       createDirectory(targetDir).finally(() => {
-        writeContent(fileName, targetDir, template);
+        writeContent(
+          `${featureName}_widget`,
+          targetDir,
+          getMedinaPresentationWidgetTemplate(featureName)
+        );
       });
     }
   }

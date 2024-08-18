@@ -1,10 +1,10 @@
 import path from "path";
-import { getMedinaDataImportsTemplate } from "../medina_clean_template/data/data_imports.template";
-import { getMedinaEntityModelTemplate } from "../medina_clean_template/data/model.template";
-import { getMedinaDataSourceTemplate } from "../medina_clean_template/data/remote_datasource.template";
-import { getMedinaRepositoryImplTemplate } from "../medina_clean_template/data/repo_impl.template";
-import { createDirectory } from "../utils/create-directory";
-import { writeContent } from "../utils/write-content";
+import { createDirectory } from "../../utils/create-directory";
+import { writeContent } from "../../utils/write-content";
+import { getMedinaDataImportsTemplate } from "../data/data_imports.template";
+import { getMedinaEntityModelTemplate } from "../data/model.template";
+import { getMedinaDataSourceTemplate } from "../data/remote_datasource.template";
+import { getMedinaRepositoryImplTemplate } from "../data/repo_impl.template";
 
 export async function createFeatureCleanArchitectureDataTemplate(
   featureName: string,

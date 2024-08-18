@@ -1,5 +1,5 @@
 import { workspace } from "vscode";
-import { getFileContent } from "../utils/get_file_content";
+import { getFileContent } from "../../utils/get_file_content";
 
 export async function modifyEndpointsClass(featureName: String) {
   let upperCasedFeatureName = featureName.toUpperCase();

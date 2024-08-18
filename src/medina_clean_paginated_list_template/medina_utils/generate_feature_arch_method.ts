@@ -1,5 +1,5 @@
 import path from "path";
-import { createDirectories } from "../utils/create-directories";
+import { createDirectories } from "../../utils/create-directories";
 import { createFeatureCleanArchitectureDataTemplate } from "./generate_data_method";
 import { createFeatureCleanArchitectureDITemplate } from "./generate_di_method";
 import { createFeatureCleanArchitectureDomainTemplate } from "./generate_domain_method";

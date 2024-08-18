@@ -16,15 +16,23 @@
   "contributes": {
     "commands": [
       {
-        "command": "base-dir-gen.createCleanArchFolderMedina",
-        "title": "BaseDirGen: New Clean Arch Feature[Medina]"
+        "command": "base-dir-gen.createCleanArchFolder",
+        "title": "BaseDirGen: New Feature"
+      },
+      {
+        "command": "base-dir-gen.createCleanArchFolderPaginated",
+        "title": "BaseDirGen: New Feature (PAGINATED LIST)"
       }
     ],
     "menus": {
       "explorer/context": [
         {
           "when": "explorerResourceIsFolder",
-          "command": "base-dir-gen.createCleanArchFolderMedina"
+          "command": "base-dir-gen.createCleanArchFolder"
+        },
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "base-dir-gen.createCleanArchFolderPaginated"
         }
       ]
     }

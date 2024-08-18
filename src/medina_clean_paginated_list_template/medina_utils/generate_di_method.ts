@@ -1,6 +1,6 @@
-import { getMedinaServiceLoctorTemplate } from "../medina_clean_template/di/di.template";
-import { createDirectory } from "../utils/create-directory";
-import { writeContent } from "../utils/write-content";
+import { createDirectory } from "../../utils/create-directory";
+import { writeContent } from "../../utils/write-content";
+import { getMedinaServiceLoctorTemplate } from "../di/di.template";
 
 export async function createFeatureCleanArchitectureDITemplate(
   featureName: string,

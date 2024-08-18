@@ -1,6 +1,6 @@
 import { window, workspace } from "vscode";
-import { getFileContent } from "../utils/get_file_content";
-import { getPascalCase } from "../utils/pascal-case";
+import { getFileContent } from "../../utils/get_file_content";
+import { getPascalCase } from "../../utils/pascal-case";
 export async function modifyDependencyHelperClass(featureName: string) {
   const upperCamelCaseFeatureName = getPascalCase(featureName);
 
@@ -19,8 +19,8 @@ export async function modifyDependencyHelperClass(featureName: string) {
       );
 
       let modContent = mContent.replace(
-        `import '../../features/home/di/setup_home_dependencies.dart';`,
-        `import '../../features/home/di/setup_home_dependencies.dart';
+        `import 'package:get_it/get_it.dart';`,
+        `import 'package:get_it/get_it.dart';
 import '../../features/${featureName}/di/setup_${featureName}_dependencies.dart';`
       );
 

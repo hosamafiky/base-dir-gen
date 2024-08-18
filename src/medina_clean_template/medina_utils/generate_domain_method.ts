@@ -1,11 +1,11 @@
 import path from "path";
-import { getMedinaAddUsecaseTemplate } from "../medina_clean_template/domain/add_usecase.template";
-import { getMedinaDomainImportsTemplate } from "../medina_clean_template/domain/domain_imports.template";
-import { getMedinaEntityTemplate } from "../medina_clean_template/domain/entity.template";
-import { getMedinaGetUsecaseTemplate } from "../medina_clean_template/domain/get_usecase.template";
-import { getMedinaRepositoryTemplate } from "../medina_clean_template/domain/repo.template";
-import { createDirectory } from "../utils/create-directory";
-import { writeContent } from "../utils/write-content";
+import { createDirectory } from "../../utils/create-directory";
+import { writeContent } from "../../utils/write-content";
+import { getMedinaAddUsecaseTemplate } from "../domain/add_usecase.template";
+import { getMedinaDomainImportsTemplate } from "../domain/domain_imports.template";
+import { getMedinaEntityTemplate } from "../domain/entity.template";
+import { getMedinaGetUsecaseTemplate } from "../domain/get_usecase.template";
+import { getMedinaRepositoryTemplate } from "../domain/repo.template";
 
 export async function createFeatureCleanArchitectureDomainTemplate(
   featureName: string,

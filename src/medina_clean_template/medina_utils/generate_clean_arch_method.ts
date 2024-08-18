@@ -1,8 +1,8 @@
 import { Uri, window } from "vscode";
-import { promptForFeatureName } from "../utils/ask-for-feature-name";
-import { getTargetDirectory } from "../utils/get-target-directory";
-import { isNameValid } from "../utils/name-validation";
-import { getPascalCase } from "../utils/pascal-case";
+import { promptForFeatureName } from "../../utils/ask-for-feature-name";
+import { getTargetDirectory } from "../../utils/get-target-directory";
+import { isNameValid } from "../../utils/name-validation";
+import { getPascalCase } from "../../utils/pascal-case";
 import { generateFeatureCleanArchitecture } from "./generate_feature_arch_method";
 
 export async function generateMedinaCleanArchitecture(uri: Uri) {
