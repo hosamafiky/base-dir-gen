@@ -1,8 +1,8 @@
 import path from "path";
-import { getMedinaDomainImportsTemplate } from "../medina_clean_template/domain/domain_imports.template";
-import { getMedinaEntityTemplate } from "../medina_clean_template/domain/entity.template";
-import { getMedinaGetUsecaseTemplate } from "../medina_clean_template/domain/get_usecase.template";
-import { getMedinaRepositoryTemplate } from "../medina_clean_template/domain/repo.template";
+import { getMedinaDomainImportsTemplate } from "../medina_clean_paginated_list_template/domain/domain_imports.template";
+import { getMedinaEntityTemplate } from "../medina_clean_paginated_list_template/domain/entity.template";
+import { getMedinaGetUsecaseTemplate } from "../medina_clean_paginated_list_template/domain/get_usecase.template";
+import { getMedinaRepositoryTemplate } from "../medina_clean_paginated_list_template/domain/repo.template";
 import { createDirectory } from "../utils/create-directory";
 import { writeContent } from "../utils/write-content";
 

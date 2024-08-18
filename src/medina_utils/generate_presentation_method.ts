@@ -1,9 +1,9 @@
 import path from "path";
-import { getMedinaCubitClassTemplate } from "../medina_clean_template/presentation/cubit.template";
-import { getMedinaCubitStateTemplate } from "../medina_clean_template/presentation/cubit_state.template";
-import { getMedinaScreenViewTemplate } from "../medina_clean_template/presentation/page.template";
-import { getMedinaPresentationImportsTemplate } from "../medina_clean_template/presentation/presentation_imports.template";
-import { getMedinaPresentationWidgetTemplate } from "../medina_clean_template/presentation/widget.template";
+import { getMedinaCubitClassTemplate } from "../medina_clean_paginated_list_template/presentation/cubit.template";
+import { getMedinaCubitStateTemplate } from "../medina_clean_paginated_list_template/presentation/cubit_state.template";
+import { getMedinaScreenViewTemplate } from "../medina_clean_paginated_list_template/presentation/page.template";
+import { getMedinaPresentationImportsTemplate } from "../medina_clean_paginated_list_template/presentation/presentation_imports.template";
+import { getMedinaPresentationWidgetTemplate } from "../medina_clean_paginated_list_template/presentation/widget.template";
 import { createDirectory } from "../utils/create-directory";
 import { writeContent } from "../utils/write-content";
 

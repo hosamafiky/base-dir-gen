@@ -1,4 +1,4 @@
-import { getMedinaServiceLoctorTemplate } from "../medina_clean_template/di/di.template";
+import { getMedinaServiceLoctorTemplate } from "../medina_clean_paginated_list_template/di/di.template";
 import { createDirectory } from "../utils/create-directory";
 import { writeContent } from "../utils/write-content";
 
