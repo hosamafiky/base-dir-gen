@@ -17,7 +17,7 @@
     "commands": [
       {
         "command": "base-dir-gen.createCleanArchFolderMedina",
-        "title": "BaseDirGen: New Clean Arch Feature[Medina]"
+        "title": "BaseDirGen: New Feature (PAGINATED-LIST)"
       }
     ],
     "menus": {
