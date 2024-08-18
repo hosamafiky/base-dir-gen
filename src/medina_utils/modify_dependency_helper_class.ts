@@ -1,4 +1,4 @@
-import { window, workspace } from "vscode";
+import { workspace } from "vscode";
 import { getFileContent } from "../utils/get_file_content";
 import { getPascalCase } from "../utils/pascal-case";
 export async function modifyDependencyHelperClass(featureName: string) {
@@ -23,8 +23,6 @@ export async function modifyDependencyHelperClass(featureName: string) {
         `import 'package:get_it/get_it.dart';
 import '../../features/${featureName}/di/setup_${featureName}_dependencies.dart';`
       );
-
-      window.showInformationMessage(modContent);
 
       const contentArray = new TextEncoder().encode(modContent);
       await workspace.fs.writeFile(file, contentArray);
