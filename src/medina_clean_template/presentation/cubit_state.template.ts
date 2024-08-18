@@ -10,37 +10,28 @@ class ${upperCamelCaseFeatureName}State extends Equatable {
   const ${upperCamelCaseFeatureName}State({
     this.${lowerCamelCaseFeatureName}sStatus = UsecaseStatus.idle,
     this.${lowerCamelCaseFeatureName}sFailure,
-    this.${lowerCamelCaseFeatureName}s = const [],
-    this.add${upperCamelCaseFeatureName}Status = UsecaseStatus.idle,
-    this.add${upperCamelCaseFeatureName}Failure,
+    this.${lowerCamelCaseFeatureName}s = const ApiResponse.success(data: PaginatedList(data: [])),
   });
 
   final UsecaseStatus ${lowerCamelCaseFeatureName}sStatus;
   final Failure? ${lowerCamelCaseFeatureName}sFailure;
-  final List<${upperCamelCaseFeatureName}> ${lowerCamelCaseFeatureName}s;
-
-  final UsecaseStatus add${upperCamelCaseFeatureName}Status;
-  final Failure? add${upperCamelCaseFeatureName}Failure;
+  final ApiResponse<PaginatedList<${upperCamelCaseFeatureName}>> ${lowerCamelCaseFeatureName}s;
 
   ${upperCamelCaseFeatureName}State copyWith({
     UsecaseStatus? ${lowerCamelCaseFeatureName}sStatus,
     Failure? ${lowerCamelCaseFeatureName}sFailure,
-    List<${upperCamelCaseFeatureName}>? ${lowerCamelCaseFeatureName}s,
-    UsecaseStatus? add${upperCamelCaseFeatureName}Status,
-    Failure? add${upperCamelCaseFeatureName}Failure,
+    ApiResponse<PaginatedList<${upperCamelCaseFeatureName}>>? ${lowerCamelCaseFeatureName}s,
   }) {
     return ${upperCamelCaseFeatureName}State(
       ${lowerCamelCaseFeatureName}sStatus: ${lowerCamelCaseFeatureName}sStatus ?? this.${lowerCamelCaseFeatureName}sStatus,
       ${lowerCamelCaseFeatureName}sFailure: ${lowerCamelCaseFeatureName}sFailure ?? this.${lowerCamelCaseFeatureName}sFailure,
       ${lowerCamelCaseFeatureName}s: ${lowerCamelCaseFeatureName}s ?? this.${lowerCamelCaseFeatureName}s,
-      add${upperCamelCaseFeatureName}Status: add${upperCamelCaseFeatureName}Status ?? this.add${upperCamelCaseFeatureName}Status,
-      add${upperCamelCaseFeatureName}Failure: add${upperCamelCaseFeatureName}Failure ?? this.add${upperCamelCaseFeatureName}Failure,
     );
   }
 
   @override
   String toString() {
-    return '${upperCamelCaseFeatureName}State(${lowerCamelCaseFeatureName}sStatus: $${lowerCamelCaseFeatureName}sStatus, ${lowerCamelCaseFeatureName}sFailure: $${lowerCamelCaseFeatureName}sFailure, ${lowerCamelCaseFeatureName}s: $${lowerCamelCaseFeatureName}s, add${upperCamelCaseFeatureName}Status: $add${upperCamelCaseFeatureName}Status, add${upperCamelCaseFeatureName}Failure: $add${upperCamelCaseFeatureName}Failure)';
+    return '${upperCamelCaseFeatureName}State(${lowerCamelCaseFeatureName}sStatus: $${lowerCamelCaseFeatureName}sStatus, ${lowerCamelCaseFeatureName}sFailure: $${lowerCamelCaseFeatureName}sFailure, ${lowerCamelCaseFeatureName}s: $${lowerCamelCaseFeatureName}s)';
   }
 
   @override
@@ -48,8 +39,6 @@ class ${upperCamelCaseFeatureName}State extends Equatable {
         ${lowerCamelCaseFeatureName}sStatus,
         ${lowerCamelCaseFeatureName}sFailure,
         ${lowerCamelCaseFeatureName}s,
-        add${upperCamelCaseFeatureName}Status,
-        add${upperCamelCaseFeatureName}Failure,
       ];
 }
 `;

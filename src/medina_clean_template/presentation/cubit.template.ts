@@ -9,36 +9,23 @@ export function getMedinaCubitClassTemplate(featureName: string): string {
 class ${upperCamelCaseFeatureName}Cubit extends Cubit<${upperCamelCaseFeatureName}State> {
   ${upperCamelCaseFeatureName}Cubit({
     required this.get${upperCamelCaseFeatureName}sUsecase,
-    required this.add${upperCamelCaseFeatureName}Usecase,
   }) : super(const ${upperCamelCaseFeatureName}State());
 
   final Get${upperCamelCaseFeatureName}sUsecase get${upperCamelCaseFeatureName}sUsecase;
-  final Add${upperCamelCaseFeatureName}Usecase add${upperCamelCaseFeatureName}Usecase;
 
   Future<void> get${upperCamelCaseFeatureName}s() async {
     emit(state.copyWith(${lowerCamelCaseFeatureName}sStatus: UsecaseStatus.running));
-    final result = await get${upperCamelCaseFeatureName}sUsecase();
+    final params = GetPaginatedListParams(page: (state.${lowerCamelCaseFeatureName}s.data?.currentPage ?? 0) + 1);
+    final result = await get${upperCamelCaseFeatureName}sUsecase(params);
     result.fold(
-      (failure) {
-        emit(state.copyWith(${lowerCamelCaseFeatureName}sStatus: UsecaseStatus.error, ${lowerCamelCaseFeatureName}sFailure: failure));
-      },
-      (${lowerCamelCaseFeatureName}s) {
-        emit(state.copyWith(${lowerCamelCaseFeatureName}sStatus: UsecaseStatus.completed, ${lowerCamelCaseFeatureName}s: ${lowerCamelCaseFeatureName}s.data));
-      },
-    );
-  }
-
-  Future<void> add${upperCamelCaseFeatureName}(Add${upperCamelCaseFeatureName}Params params) async {
-    emit(state.copyWith(add${upperCamelCaseFeatureName}Status: UsecaseStatus.running));
-    final result = await add${upperCamelCaseFeatureName}Usecase(params);
-    result.fold(
-      (failure) {
-        emit(state.copyWith(add${upperCamelCaseFeatureName}Status: UsecaseStatus.error, add${upperCamelCaseFeatureName}Failure: failure));
-      },
-      (response) {
-        final old${upperCamelCaseFeatureName}s = List<${upperCamelCaseFeatureName}>.from(state.${lowerCamelCaseFeatureName}s);
-        emit(state.copyWith(add${upperCamelCaseFeatureName}Status: UsecaseStatus.completed, ${lowerCamelCaseFeatureName}s: old${upperCamelCaseFeatureName}s..insert(0, response.data!)));
-      },
+      (failure) => emit(state.copyWith(
+        ${lowerCamelCaseFeatureName}sStatus: UsecaseStatus.error,
+        ${lowerCamelCaseFeatureName}sFailure: failure,
+      )),
+      (${lowerCamelCaseFeatureName}s) => emit(state.copyWith(
+        ${lowerCamelCaseFeatureName}sStatus: UsecaseStatus.completed,
+        ${lowerCamelCaseFeatureName}s: ${lowerCamelCaseFeatureName}s,
+      )),
     );
   }
 }

@@ -27,14 +27,17 @@ class ${upperCamelCaseFeatureName}sPageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MainAppBar(),
-      body: BlocSelector<${upperCamelCaseFeatureName}Cubit, ${upperCamelCaseFeatureName}State, ({UsecaseStatus status, Failure? failure, List<${upperCamelCaseFeatureName}> ${lowerCamelCaseFeatureName}s})>(
-        selector: (state) => (status: state.${lowerCamelCaseFeatureName}sStatus, failure: state.${lowerCamelCaseFeatureName}sFailure, ${lowerCamelCaseFeatureName}s: state.${lowerCamelCaseFeatureName}s),
+      body: BlocSelector<${upperCamelCaseFeatureName}Cubit, ${upperCamelCaseFeatureName}State, ({UsecaseStatus status, Failure? failure, PaginatedList<${upperCamelCaseFeatureName}> ${lowerCamelCaseFeatureName}es})>(
+        selector: (state) => (status: state.${lowerCamelCaseFeatureName}sStatus, failure: state.${lowerCamelCaseFeatureName}sFailure, ${lowerCamelCaseFeatureName}es: state.${lowerCamelCaseFeatureName}s.data!),
         builder: (context, state) {
+          if (state.status == UsecaseStatus.running && state.${lowerCamelCaseFeatureName}es.data.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
           return ListView.separated(
-            itemCount: state.${lowerCamelCaseFeatureName}s.length,
+            itemCount: state.${lowerCamelCaseFeatureName}es.data.length,
             separatorBuilder: (context, index) => SizedBox(height: 16.h),
             itemBuilder: (context, index) {
-              final ${lowerCamelCaseFeatureName} = state.${lowerCamelCaseFeatureName}s[index];
+              final ${lowerCamelCaseFeatureName} = state.${lowerCamelCaseFeatureName}es.data[index];
               return ListTile(
                 leading: Text(${lowerCamelCaseFeatureName}.id.toString()),
                 title: Text(${lowerCamelCaseFeatureName}.title),
@@ -47,14 +50,6 @@ class ${upperCamelCaseFeatureName}sPageBody extends StatelessWidget {
             },
           );
         },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final cubit = context.read<${upperCamelCaseFeatureName}Cubit>();
-          await context.showSheet<${upperCamelCaseFeatureName}>(child: Add${upperCamelCaseFeatureName}Sheet(${lowerCamelCaseFeatureName}Cubit: cubit));
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }

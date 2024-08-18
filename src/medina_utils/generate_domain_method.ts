@@ -1,5 +1,4 @@
 import path from "path";
-import { getMedinaAddUsecaseTemplate } from "../medina_clean_template/domain/add_usecase.template";
 import { getMedinaDomainImportsTemplate } from "../medina_clean_template/domain/domain_imports.template";
 import { getMedinaEntityTemplate } from "../medina_clean_template/domain/entity.template";
 import { getMedinaGetUsecaseTemplate } from "../medina_clean_template/domain/get_usecase.template";
@@ -22,14 +21,8 @@ export async function createFeatureCleanArchitectureDomainTemplate(
     const directory = subDirectories[index];
     let targetDir = path.join(targetDirectory, directory);
     if (index == 1) {
-      let usecasesNames = [
-        `get_${featureName}s_usecase`,
-        `add_${featureName}_usecase`,
-      ];
-      let usecasesTemplates = [
-        getMedinaGetUsecaseTemplate(featureName),
-        getMedinaAddUsecaseTemplate(featureName),
-      ];
+      let usecasesNames = [`get_${featureName}s_usecase`];
+      let usecasesTemplates = [getMedinaGetUsecaseTemplate(featureName)];
 
       for (let i = 0; i < usecasesNames.length; i++) {
         const template = usecasesTemplates[i];

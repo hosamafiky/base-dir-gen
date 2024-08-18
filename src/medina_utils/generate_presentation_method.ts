@@ -1,5 +1,4 @@
 import path from "path";
-import { getMedinaAddSheetTemplate } from "../medina_clean_template/presentation/add_sheet.template";
 import { getMedinaCubitClassTemplate } from "../medina_clean_template/presentation/cubit.template";
 import { getMedinaCubitStateTemplate } from "../medina_clean_template/presentation/cubit_state.template";
 import { getMedinaScreenViewTemplate } from "../medina_clean_template/presentation/page.template";
@@ -40,14 +39,9 @@ export async function createFeatureCleanArchitecturePresentationTemplate(
         );
       });
     } else {
-      const template = getMedinaAddSheetTemplate(featureName);
-      const fileName = `add_${featureName}_sheet`;
-
       let targetDir = path.join(targetDirectory, directory);
 
-      createDirectory(targetDir).finally(() => {
-        writeContent(fileName, targetDir, template);
-      });
+      createDirectory(targetDir);
     }
   }
   createDirectory(targetDirectory).finally(() => {

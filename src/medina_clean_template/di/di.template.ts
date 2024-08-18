@@ -12,17 +12,12 @@ void setUp${upperCamelCaseFeatureName}Dependencies() async {
   DependencyHelper.instance.serviceLocator.registerFactory(
     () => ${upperCamelCaseFeatureName}Cubit(
       get${upperCamelCaseFeatureName}sUsecase: DependencyHelper.instance.serviceLocator(),
-      add${upperCamelCaseFeatureName}Usecase: DependencyHelper.instance.serviceLocator(),
     ),
   );
 
   // USECASES
   DependencyHelper.instance.serviceLocator.registerLazySingleton(
     () => Get${upperCamelCaseFeatureName}sUsecase(repository: DependencyHelper.instance.serviceLocator()),
-  );
-
-  DependencyHelper.instance.serviceLocator.registerLazySingleton(
-    () => Add${upperCamelCaseFeatureName}Usecase(repository: DependencyHelper.instance.serviceLocator()),
   );
 
   // REPOSITORIES
@@ -34,5 +29,6 @@ void setUp${upperCamelCaseFeatureName}Dependencies() async {
   DependencyHelper.instance.serviceLocator.registerLazySingleton<${upperCamelCaseFeatureName}RemoteDataSource>(
     () => ${upperCamelCaseFeatureName}RemoteDataSourceImpl(),
   );
-}`;
+}
+`;
 }
