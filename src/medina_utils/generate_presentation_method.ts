@@ -3,6 +3,7 @@ import { getMedinaCubitClassTemplate } from "../medina_clean_template/presentati
 import { getMedinaCubitStateTemplate } from "../medina_clean_template/presentation/cubit_state.template";
 import { getMedinaScreenViewTemplate } from "../medina_clean_template/presentation/page.template";
 import { getMedinaPresentationImportsTemplate } from "../medina_clean_template/presentation/presentation_imports.template";
+import { getMedinaPresentationWidgetTemplate } from "../medina_clean_template/presentation/widget.template";
 import { createDirectory } from "../utils/create-directory";
 import { writeContent } from "../utils/write-content";
 
@@ -41,7 +42,13 @@ export async function createFeatureCleanArchitecturePresentationTemplate(
     } else {
       let targetDir = path.join(targetDirectory, directory);
 
-      createDirectory(targetDir);
+      createDirectory(targetDir).finally(() => {
+        writeContent(
+          `${featureName}_widget`,
+          targetDir,
+          getMedinaPresentationWidgetTemplate(featureName)
+        );
+      });
     }
   }
   createDirectory(targetDirectory).finally(() => {

@@ -17,5 +17,6 @@ import '../domain/domain_imports.dart';
 part '../presentation/cubit/${featureName}_cubit.dart';
 part '../presentation/cubit/${featureName}_state.dart';
 part '../presentation/pages/${featureName}s_page.dart';
+part 'widgets/${featureName}_widget.dart';
 `;
 }
