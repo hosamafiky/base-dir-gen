@@ -13,7 +13,7 @@ class ${upperCamelCaseFeatureName}RemoteDataSourceImpl implements ${upperCamelCa
   Future<ApiResponse<PaginatedList<${upperCamelCaseFeatureName}Model>>> get${upperCamelCaseFeatureName}s(GetPaginatedListParams params) async {
     final request = ApiRequest(
       method: RequestMethod.get,
-      path: "/branches",
+      path: "/${featureName}s",
       queryParameters: params.toMap(),
     );
 
