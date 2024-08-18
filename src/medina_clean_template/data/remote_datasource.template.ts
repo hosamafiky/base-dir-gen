@@ -21,7 +21,7 @@ class ${upperCamelCaseFeatureName}RemoteDataSourceImpl implements ${upperCamelCa
           request,
           mapper: (json) => ApiResponse.fromMapSuccess(
             json,
-            mapper: (data) => PaginatedList.fromMap(data, mapper: (x) => ${upperCamelCaseFeatureName}Model.fromMap(x)),
+            mapper: (data) => PaginatedList<${upperCamelCaseFeatureName}Model>.fromMap(data, mapper: (x) => ${upperCamelCaseFeatureName}Model.fromMap(x)),
           ),
         );
   }
